@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/recovery-profiles",
+      "handler": "recovery-profile.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/recovery-profiles/:id",
+      "handler": "recovery-profile.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/recovery-profiles",
+      "handler": "recovery-profile.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/recovery-profiles/:id",
+      "handler": "recovery-profile.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/recovery-profiles/:id",
+      "handler": "recovery-profile.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

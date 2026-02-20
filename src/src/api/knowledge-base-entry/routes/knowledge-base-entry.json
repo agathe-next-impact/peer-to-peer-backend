@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/knowledge-base-entrys",
+      "handler": "knowledge-base-entry.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/knowledge-base-entrys/:id",
+      "handler": "knowledge-base-entry.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/knowledge-base-entrys",
+      "handler": "knowledge-base-entry.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/knowledge-base-entrys/:id",
+      "handler": "knowledge-base-entry.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/knowledge-base-entrys/:id",
+      "handler": "knowledge-base-entry.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

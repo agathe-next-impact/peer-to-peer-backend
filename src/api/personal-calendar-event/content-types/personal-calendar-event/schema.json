@@ -1,0 +1,69 @@
+{
+  "kind": "collectionType",
+  "collectionName": "personal_calendar_events",
+  "info": {
+    "singularName": "personal-calendar-event",
+    "pluralName": "personal-calendar-events",
+    "displayName": "Personal Calendar Event",
+    "description": "Calendrier personnel du membre"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "title",
+        "description"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "startDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "endDate": {
+      "type": "datetime"
+    },
+    "isAllDay": {
+      "type": "boolean",
+      "default": false
+    },
+    "eventType": {
+      "type": "enumeration",
+      "enum": [
+        "appointment",
+        "medication",
+        "activity",
+        "goal_milestone",
+        "custom"
+      ]
+    },
+    "reminder": {
+      "type": "json"
+    },
+    "googleEventId": {
+      "type": "string"
+    },
+    "recurrence": {
+      "type": "json"
+    }
+  }
+}

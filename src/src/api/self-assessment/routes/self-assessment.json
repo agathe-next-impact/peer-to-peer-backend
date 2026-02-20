@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/self-assessments",
+      "handler": "self-assessment.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/self-assessments/:id",
+      "handler": "self-assessment.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/self-assessments",
+      "handler": "self-assessment.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/self-assessments/:id",
+      "handler": "self-assessment.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/self-assessments/:id",
+      "handler": "self-assessment.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

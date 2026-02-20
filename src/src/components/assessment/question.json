@@ -1,0 +1,42 @@
+{
+  "collectionName": "components_assessment_question",
+  "info": {
+    "displayName": "Assessment Question",
+    "icon": "question",
+    "description": "Question d'évaluation"
+  },
+  "options": {},
+  "attributes": {
+    "questionId": {
+      "type": "string",
+      "required": true
+    },
+    "text": {
+      "type": "text",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "likert_5",
+        "likert_7",
+        "yes_no",
+        "numeric",
+        "text"
+      ],
+      "required": true
+    },
+    "dimension": {
+      "type": "string",
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "required": true
+    },
+    "isRequired": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

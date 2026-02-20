@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/platform-settings",
+      "handler": "platform-settings.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/platform-settings",
+      "handler": "platform-settings.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/platform-settings",
+      "handler": "platform-settings.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

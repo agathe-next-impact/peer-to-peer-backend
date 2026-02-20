@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "situation_thesauruses",
+  "info": {
+    "singularName": "situation-thesaurus",
+    "pluralName": "situation-thesauruses",
+    "displayName": "Situation Thesaurus",
+    "description": "Thésaurus personnel de tags pour le décodeur"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "categories",
+        "thoughts",
+        "emotions",
+        "sensations",
+        "behaviors"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "categories": {
+      "type": "json"
+    },
+    "thoughts": {
+      "type": "json"
+    },
+    "emotions": {
+      "type": "json"
+    },
+    "sensations": {
+      "type": "json"
+    },
+    "behaviors": {
+      "type": "json"
+    }
+  }
+}

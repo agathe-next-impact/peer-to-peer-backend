@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "companion_bookmarks",
+  "info": {
+    "singularName": "companion-bookmark",
+    "pluralName": "companion-bookmarks",
+    "displayName": "Companion Bookmark",
+    "description": "Compagnons enregistrés dans le répertoire personnel"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": ["personalNote"]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "companion": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community-profile.community-profile"
+    },
+    "personalNote": {
+      "type": "text"
+    },
+    "isPinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "addedAt": {
+      "type": "datetime"
+    }
+  }
+}

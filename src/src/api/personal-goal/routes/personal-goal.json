@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/personal-goals",
+      "handler": "personal-goal.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/personal-goals/:id",
+      "handler": "personal-goal.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/personal-goals",
+      "handler": "personal-goal.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/personal-goals/:id",
+      "handler": "personal-goal.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/personal-goals/:id",
+      "handler": "personal-goal.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

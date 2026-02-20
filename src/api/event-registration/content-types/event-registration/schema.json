@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_registrations",
+  "info": {
+    "singularName": "event-registration",
+    "pluralName": "event-registrations",
+    "displayName": "Event Registration",
+    "description": "Inscriptions aux événements et groupes"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "event": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::event.event"
+    },
+    "communityGroup": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community-group.community-group"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["registered", "waitlisted", "cancelled"],
+      "default": "registered",
+      "required": true
+    },
+    "personalCalendarEvent": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::personal-calendar-event.personal-calendar-event"
+    },
+    "registeredAt": {
+      "type": "datetime"
+    }
+  }
+}

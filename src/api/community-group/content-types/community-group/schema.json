@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "community_groups",
+  "info": {
+    "singularName": "community-group",
+    "pluralName": "community-groups",
+    "displayName": "Community Group",
+    "description": "Groupes communautaires (visio ou présentiel)"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "description": {
+      "type": "blocks",
+      "required": true
+    },
+    "groupType": {
+      "type": "enumeration",
+      "enum": ["video", "in_person", "hybrid"],
+      "required": true
+    },
+    "meetingLink": {
+      "type": "string"
+    },
+    "location": {
+      "type": "component",
+      "component": "location.address",
+      "repeatable": false
+    },
+    "structure": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::structure.structure"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "communityGroups"
+    },
+    "maxMembers": {
+      "type": "integer"
+    },
+    "schedule": {
+      "type": "text"
+    },
+    "coverImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "createdByMember": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community-profile.community-profile"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["draft", "active", "archived", "cancelled"],
+      "default": "draft",
+      "required": true
+    }
+  }
+}

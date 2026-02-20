@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/recovery-recommendations",
+      "handler": "recovery-recommendation.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/recovery-recommendations/:id",
+      "handler": "recovery-recommendation.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/recovery-recommendations",
+      "handler": "recovery-recommendation.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/recovery-recommendations/:id",
+      "handler": "recovery-recommendation.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/recovery-recommendations/:id",
+      "handler": "recovery-recommendation.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

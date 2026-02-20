@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "situation_observations",
+  "info": {
+    "singularName": "situation-observation",
+    "pluralName": "situation-observations",
+    "displayName": "Situation Observation",
+    "description": "Observations du décodeur de situations"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "triggerDescription",
+        "thoughts",
+        "emotions",
+        "sensations",
+        "behaviors"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "date": {
+      "type": "datetime",
+      "required": true
+    },
+    "category": {
+      "type": "string",
+      "required": true
+    },
+    "triggerDescription": {
+      "type": "text",
+      "required": true
+    },
+    "triggerType": {
+      "type": "enumeration",
+      "enum": [
+        "exposition",
+        "anticipatory_thought",
+        "physical_sensation",
+        "spontaneous"
+      ],
+      "required": true
+    },
+    "intensity": {
+      "type": "integer",
+      "min": 1,
+      "max": 10,
+      "required": true
+    },
+    "thoughts": {
+      "type": "json"
+    },
+    "emotions": {
+      "type": "json"
+    },
+    "sensations": {
+      "type": "json"
+    },
+    "behaviors": {
+      "type": "json"
+    }
+  }
+}

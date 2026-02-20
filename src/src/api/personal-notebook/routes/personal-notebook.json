@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/personal-notebooks",
+      "handler": "personal-notebook.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/personal-notebooks/:id",
+      "handler": "personal-notebook.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/personal-notebooks",
+      "handler": "personal-notebook.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/personal-notebooks/:id",
+      "handler": "personal-notebook.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/personal-notebooks/:id",
+      "handler": "personal-notebook.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

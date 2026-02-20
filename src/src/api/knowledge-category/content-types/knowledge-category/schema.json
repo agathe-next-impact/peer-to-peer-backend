@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "knowledge_categories",
+  "info": {
+    "singularName": "knowledge-category",
+    "pluralName": "knowledge-categories",
+    "displayName": "Knowledge Category",
+    "description": "Catégories de la base de connaissances"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "parentCategory": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::knowledge-category.knowledge-category"
+    },
+    "entries": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::knowledge-base-entry.knowledge-base-entry",
+      "mappedBy": "category"
+    }
+  }
+}

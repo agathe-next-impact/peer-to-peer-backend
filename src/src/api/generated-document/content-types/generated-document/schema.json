@@ -1,0 +1,56 @@
+{
+  "kind": "collectionType",
+  "collectionName": "generated_documents",
+  "info": {
+    "singularName": "generated-document",
+    "pluralName": "generated-documents",
+    "displayName": "Generated Document",
+    "description": "Documents générés par les membres"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "title",
+        "generatedData",
+        "pdfFile"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "template": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::document-template.document-template"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "generatedData": {
+      "type": "json",
+      "required": true
+    },
+    "pdfFile": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "generatedAt": {
+      "type": "datetime"
+    }
+  }
+}

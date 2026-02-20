@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "self_assessments",
+  "info": {
+    "singularName": "self-assessment",
+    "pluralName": "self-assessments",
+    "displayName": "Self Assessment",
+    "description": "Auto-évaluations complétées"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "responses",
+        "scores",
+        "globalScore",
+        "personalNote"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "template": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::assessment-template.assessment-template"
+    },
+    "date": {
+      "type": "datetime",
+      "required": true
+    },
+    "responses": {
+      "type": "json",
+      "required": true
+    },
+    "scores": {
+      "type": "json",
+      "required": true
+    },
+    "globalScore": {
+      "type": "decimal"
+    },
+    "personalNote": {
+      "type": "text"
+    }
+  }
+}

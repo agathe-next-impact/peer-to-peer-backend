@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "personal_notebooks",
+  "info": {
+    "singularName": "personal-notebook",
+    "pluralName": "personal-notebooks",
+    "displayName": "Personal Notebook",
+    "description": "Carnet de bord personnel"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "title",
+        "content"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "text",
+      "required": true
+    },
+    "mood": {
+      "type": "enumeration",
+      "enum": [
+        "very_bad",
+        "bad",
+        "neutral",
+        "good",
+        "very_good"
+      ]
+    },
+    "tags": {
+      "type": "json"
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    }
+  }
+}

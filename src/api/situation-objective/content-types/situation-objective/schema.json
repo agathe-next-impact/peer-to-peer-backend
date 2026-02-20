@@ -1,0 +1,77 @@
+{
+  "kind": "collectionType",
+  "collectionName": "situation_objectives",
+  "info": {
+    "singularName": "situation-objective",
+    "pluralName": "situation-objectives",
+    "displayName": "Situation Objective",
+    "description": "Objectifs liés au décodeur de situations"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "title",
+        "actionWhat",
+        "whatWorked",
+        "whatDidntWork"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "observation": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::situation-observation.situation-observation"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "problemType": {
+      "type": "enumeration",
+      "enum": [
+        "practical",
+        "hypothetical"
+      ],
+      "required": true
+    },
+    "actionWhat": {
+      "type": "text"
+    },
+    "actionWhen": {
+      "type": "datetime"
+    },
+    "targetIntensity": {
+      "type": "integer",
+      "min": 0,
+      "max": 6
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "planned",
+        "completed",
+        "failed"
+      ],
+      "default": "planned"
+    },
+    "whatWorked": {
+      "type": "text"
+    },
+    "whatDidntWork": {
+      "type": "text"
+    }
+  }
+}

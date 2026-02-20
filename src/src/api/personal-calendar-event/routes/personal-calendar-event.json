@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/personal-calendar-events",
+      "handler": "personal-calendar-event.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/personal-calendar-events/:id",
+      "handler": "personal-calendar-event.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/personal-calendar-events",
+      "handler": "personal-calendar-event.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/personal-calendar-events/:id",
+      "handler": "personal-calendar-event.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/personal-calendar-events/:id",
+      "handler": "personal-calendar-event.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/generated-documents",
+      "handler": "generated-document.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/generated-documents/:id",
+      "handler": "generated-document.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/generated-documents",
+      "handler": "generated-document.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/generated-documents/:id",
+      "handler": "generated-document.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/generated-documents/:id",
+      "handler": "generated-document.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

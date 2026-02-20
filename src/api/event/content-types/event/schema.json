@@ -1,0 +1,104 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "Event",
+    "description": "Événements / Agenda"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "description": {
+      "type": "blocks",
+      "required": true
+    },
+    "startDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "endDate": {
+      "type": "datetime"
+    },
+    "isAllDay": {
+      "type": "boolean",
+      "default": false
+    },
+    "location": {
+      "type": "component",
+      "component": "location.address",
+      "repeatable": false
+    },
+    "isOnline": {
+      "type": "boolean",
+      "default": false
+    },
+    "onlineLink": {
+      "type": "string"
+    },
+    "eventType": {
+      "type": "enumeration",
+      "enum": [
+        "workshop",
+        "conference",
+        "meetup",
+        "support_group",
+        "training",
+        "other"
+      ],
+      "required": true
+    },
+    "organizer": {
+      "type": "string"
+    },
+    "structure": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::structure.structure"
+    },
+    "coverImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "events"
+    },
+    "submittedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::contributor-profile.contributor-profile"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "in_review",
+        "published",
+        "cancelled"
+      ],
+      "default": "draft",
+      "required": true
+    },
+    "maxParticipants": {
+      "type": "integer"
+    }
+  }
+}

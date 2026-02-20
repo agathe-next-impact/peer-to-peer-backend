@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "recovery_recommendations",
+  "info": {
+    "singularName": "recovery-recommendation",
+    "pluralName": "recovery-recommendations",
+    "displayName": "Recovery Recommendation",
+    "description": "Recommandations de rétablissement"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "encryption": {
+      "enabled": true,
+      "fields": ["reason"]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "article",
+        "tutorial",
+        "event",
+        "structure",
+        "assessment",
+        "goal_suggestion"
+      ],
+      "required": true
+    },
+    "targetContentType": {
+      "type": "string",
+      "required": true
+    },
+    "targetContentId": {
+      "type": "integer",
+      "required": true
+    },
+    "reason": {
+      "type": "text"
+    },
+    "relevanceScore": {
+      "type": "decimal"
+    },
+    "isViewed": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "isDismissed": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    }
+  }
+}

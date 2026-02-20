@@ -1,0 +1,74 @@
+{
+  "kind": "collectionType",
+  "collectionName": "personal_goals",
+  "info": {
+    "singularName": "personal-goal",
+    "pluralName": "personal-goals",
+    "displayName": "Personal Goal",
+    "description": "Objectifs personnels"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "title",
+        "description",
+        "milestones"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "horizon": {
+      "type": "enumeration",
+      "enum": [
+        "short_term",
+        "medium_term",
+        "long_term"
+      ],
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "completed",
+        "abandoned"
+      ],
+      "default": "not_started",
+      "required": true
+    },
+    "progress": {
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 0
+    },
+    "targetDate": {
+      "type": "date"
+    },
+    "milestones": {
+      "type": "component",
+      "component": "goal.milestone",
+      "repeatable": true
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "kind": "collectionType",
+  "collectionName": "self_problem_solvings",
+  "info": {
+    "singularName": "self-problem-solving",
+    "pluralName": "self-problem-solvings",
+    "displayName": "Self Problem Solving",
+    "description": "Atelier des Solutions — résolution de problèmes en 6 étapes"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "title",
+        "challengeReformulation",
+        "situation",
+        "objective",
+        "mainObstacle",
+        "slicingComponents",
+        "brainstormingIdeas",
+        "solutionAnalysis",
+        "actionPlanWhat",
+        "actionPlanWhere",
+        "actionPlanWithWhom",
+        "obstacles",
+        "iceBreaker",
+        "actionSteps",
+        "reviewWhatWorked",
+        "reviewWhatFailed"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "financial",
+        "relational",
+        "health",
+        "work",
+        "housing",
+        "administrative",
+        "other"
+      ],
+      "required": true
+    },
+    "currentStep": {
+      "type": "integer",
+      "default": 1,
+      "min": 1,
+      "max": 6,
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "in_progress",
+        "waiting_review",
+        "completed",
+        "abandoned"
+      ],
+      "default": "in_progress",
+      "required": true
+    },
+    "isHypothetical": {
+      "type": "boolean",
+      "default": false
+    },
+    "challengeReformulation": {
+      "type": "text"
+    },
+    "situation": {
+      "type": "text"
+    },
+    "objective": {
+      "type": "text"
+    },
+    "mainObstacle": {
+      "type": "text"
+    },
+    "needsSlicing": {
+      "type": "boolean",
+      "default": false
+    },
+    "slicingComponents": {
+      "type": "json"
+    },
+    "activeSubProblem": {
+      "type": "string"
+    },
+    "brainstormingIdeas": {
+      "type": "json"
+    },
+    "solutionAnalysis": {
+      "type": "json"
+    },
+    "chosenSolutionIndex": {
+      "type": "integer"
+    },
+    "acceptanceChecked": {
+      "type": "boolean",
+      "default": false
+    },
+    "actionPlanWhat": {
+      "type": "text"
+    },
+    "actionPlanWhen": {
+      "type": "string"
+    },
+    "actionPlanWhere": {
+      "type": "string"
+    },
+    "actionPlanWithWhom": {
+      "type": "string"
+    },
+    "obstacles": {
+      "type": "json"
+    },
+    "iceBreaker": {
+      "type": "text"
+    },
+    "actionSteps": {
+      "type": "json"
+    },
+    "reviewDate": {
+      "type": "date"
+    },
+    "reviewWhatWorked": {
+      "type": "text"
+    },
+    "reviewWhatFailed": {
+      "type": "text"
+    },
+    "reviewOutcome": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "success",
+        "adjust",
+        "new_solution"
+      ]
+    }
+  }
+}

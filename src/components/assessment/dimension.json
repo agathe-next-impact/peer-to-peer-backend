@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_assessment_dimension",
+  "info": {
+    "displayName": "Assessment Dimension",
+    "icon": "chartBubble",
+    "description": "Dimension d'évaluation"
+  },
+  "options": {},
+  "attributes": {
+    "dimensionId": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "weight": {
+      "type": "decimal",
+      "default": 1
+    }
+  }
+}

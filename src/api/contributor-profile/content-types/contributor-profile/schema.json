@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contributor_profiles",
+  "info": {
+    "singularName": "contributor-profile",
+    "pluralName": "contributor-profiles",
+    "displayName": "Contributor Profile",
+    "description": "Profil public du contributeur"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "displayName": {
+      "type": "string",
+      "required": true
+    },
+    "bio": {
+      "type": "text"
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "member",
+        "contributor",
+        "moderator",
+        "peer_helper"
+      ],
+      "default": "member",
+      "required": true
+    },
+    "contributions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::contribution.contribution",
+      "mappedBy": "contributor"
+    },
+    "authoredArticles": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::blog-article.blog-article",
+      "mappedBy": "author"
+    },
+    "joinedAt": {
+      "type": "date"
+    }
+  }
+}

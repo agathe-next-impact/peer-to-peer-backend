@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "assessment_templates",
+  "info": {
+    "singularName": "assessment-template",
+    "pluralName": "assessment-templates",
+    "displayName": "Assessment Template",
+    "description": "Modèles de questionnaires d'évaluation"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "version": {
+      "type": "string",
+      "required": true
+    },
+    "dimensions": {
+      "type": "component",
+      "component": "assessment.dimension",
+      "repeatable": true,
+      "required": true
+    },
+    "questions": {
+      "type": "component",
+      "component": "assessment.question",
+      "repeatable": true,
+      "required": true
+    },
+    "scoringMethod": {
+      "type": "enumeration",
+      "enum": [
+        "sum",
+        "average",
+        "weighted",
+        "custom"
+      ],
+      "required": true
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    }
+  }
+}

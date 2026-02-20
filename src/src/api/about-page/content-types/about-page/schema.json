@@ -1,0 +1,34 @@
+{
+  "kind": "singleType",
+  "collectionName": "about_pages",
+  "info": {
+    "singularName": "about-page",
+    "pluralName": "about-pages",
+    "displayName": "About Page",
+    "description": "Page À propos"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "blocks",
+      "required": true
+    },
+    "teamMembers": {
+      "type": "component",
+      "component": "about.team-member",
+      "repeatable": true
+    },
+    "values": {
+      "type": "component",
+      "component": "about.value-card",
+      "repeatable": true
+    }
+  }
+}

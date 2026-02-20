@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "community_profiles",
+  "info": {
+    "singularName": "community-profile",
+    "pluralName": "community-profiles",
+    "displayName": "Community Profile",
+    "description": "Profil communautaire opt-in visible par les pairs"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "pseudonym": {
+      "type": "string",
+      "required": true
+    },
+    "bio": {
+      "type": "text"
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "recoveryTags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "communityProfiles"
+    },
+    "sharedFlowerScores": {
+      "type": "json"
+    },
+    "isCompanion": {
+      "type": "boolean",
+      "default": false
+    },
+    "companionSince": {
+      "type": "date"
+    },
+    "specialties": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "communityProfileSpecialties"
+    },
+    "recoveryPath": {
+      "type": "text"
+    },
+    "contactPreference": {
+      "type": "enumeration",
+      "enum": ["platform_message", "email", "none"],
+      "default": "none"
+    },
+    "isVisible": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "joinedAt": {
+      "type": "date"
+    }
+  }
+}

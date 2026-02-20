@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "early_warning_signs",
+  "info": {
+    "singularName": "early-warning-sign",
+    "pluralName": "early-warning-signs",
+    "displayName": "Early Warning Sign",
+    "description": "Signaux avant-coureurs personnels"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": ["signs"]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "signs": {
+      "type": "json"
+    }
+  }
+}

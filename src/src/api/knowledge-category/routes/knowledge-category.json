@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/knowledge-categorys",
+      "handler": "knowledge-category.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/knowledge-categorys/:id",
+      "handler": "knowledge-category.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/knowledge-categorys",
+      "handler": "knowledge-category.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/knowledge-categorys/:id",
+      "handler": "knowledge-category.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/knowledge-categorys/:id",
+      "handler": "knowledge-category.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

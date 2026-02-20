@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/assessment-templates",
+      "handler": "assessment-template.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/assessment-templates/:id",
+      "handler": "assessment-template.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/assessment-templates",
+      "handler": "assessment-template.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/assessment-templates/:id",
+      "handler": "assessment-template.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/assessment-templates/:id",
+      "handler": "assessment-template.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

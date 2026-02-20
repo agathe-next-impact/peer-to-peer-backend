@@ -12,13 +12,17 @@
     "start": "strapi start",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
-    "upgrade:dry": "npx @strapi/upgrade latest --dry"
+    "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "generate:schemas": "node scripts/generate-strapi-schemas.js --output ./src",
+    "generate:schemas:dry": "node scripts/generate-strapi-schemas.js --output ./src --dry-run",
+    "seed": "node database/seeds/seed.js"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.36.0",
     "@strapi/plugin-users-permissions": "5.36.0",
     "@strapi/strapi": "5.36.0",
     "better-sqlite3": "12.4.1",
+    "pg": "^8.18.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",

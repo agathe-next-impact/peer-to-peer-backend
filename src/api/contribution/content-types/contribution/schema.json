@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contributions",
+  "info": {
+    "singularName": "contribution",
+    "pluralName": "contributions",
+    "displayName": "Contribution",
+    "description": "Contributions soumises par les membres"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "structure",
+        "event",
+        "resource",
+        "blog_article",
+        "correction"
+      ],
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "data": {
+      "type": "json",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "revision_needed"
+      ],
+      "default": "pending",
+      "required": true
+    },
+    "moderationNote": {
+      "type": "text"
+    },
+    "contributor": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::contributor-profile.contributor-profile",
+      "inversedBy": "contributions"
+    },
+    "relatedContent": {
+      "type": "string"
+    }
+  }
+}

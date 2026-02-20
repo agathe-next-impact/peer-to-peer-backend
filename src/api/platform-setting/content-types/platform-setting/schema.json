@@ -1,0 +1,49 @@
+{
+  "kind": "singleType",
+  "collectionName": "platform_settings",
+  "info": {
+    "singularName": "platform-setting",
+    "pluralName": "platform-settings",
+    "displayName": "Platform Settings",
+    "description": "Paramètres de la plateforme"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "siteName": {
+      "type": "string",
+      "required": true
+    },
+    "siteDescription": {
+      "type": "text"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "favicon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "maintenanceMode": {
+      "type": "boolean",
+      "default": false
+    },
+    "defaultAssessmentTemplate": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::assessment-template.assessment-template"
+    },
+    "googleCalendarClientId": {
+      "type": "string"
+    }
+  }
+}

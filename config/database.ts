@@ -6,6 +6,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const client = env('DATABASE_CLIENT', isProduction ? 'postgres' : 'sqlite');
 
+
   if (client === 'sqlite') {
     return {
       connection: {

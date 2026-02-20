@@ -2,8 +2,9 @@ import path from 'path';
 import type { Core } from '@strapi/strapi';
 
 const config = ({ env }: Core.Config.Shared.ConfigParams) => {
-  const client = env('DATABASE_CLIENT') ||
-    (env('DATABASE_URL') || env('DATABASE_HOST') ? 'postgres' : 'sqlite');
+  // Default to postgres in production (Strapi Cloud), sqlite in dev
+  const isProduction = process.env.NODE_ENV === 'production';
+  const client = env('DATABASE_CLIENT', isProduction ? 'postgres' : 'sqlite');
 
   if (client === 'sqlite') {
     return {

@@ -3,7 +3,7 @@ import type { Core } from '@strapi/strapi';
 const isProduction = process.env.NODE_ENV === 'production';
 
 if (isProduction && !process.env.CORS_ORIGIN) {
-  throw new Error('CORS_ORIGIN environment variable is required in production');
+  console.warn('WARNING: CORS_ORIGIN is not set. CORS will default to localhost origins.');
 }
 
 const config: Core.Config.Middlewares = [

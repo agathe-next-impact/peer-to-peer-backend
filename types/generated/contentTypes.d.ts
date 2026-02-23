@@ -603,6 +603,44 @@ export interface ApiCommunityProfileCommunityProfile extends Struct.CollectionTy
   };
 }
 
+export interface ApiCompanionAccessCompanionAccess extends Struct.CollectionTypeSchema {
+  collectionName: 'companion_accesses';
+  info: {
+    description: "Droits d'acc\u00E8s accord\u00E9s par un membre \u00E0 un compagnon sur ses sections Outils";
+    displayName: 'Companion Access';
+    pluralName: 'companion-accesses';
+    singularName: 'companion-access';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+  };
+  attributes: {
+    companion: Schema.Attribute.Relation<'manyToOne', 'plugin::users-permissions.user'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::companion-access.companion-access'
+    > &
+      Schema.Attribute.Private;
+    owner: Schema.Attribute.Relation<'manyToOne', 'plugin::users-permissions.user'>;
+    permission: Schema.Attribute.Enumeration<['read', 'readwrite']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'read'>;
+    publishedAt: Schema.Attribute.DateTime;
+    section: Schema.Attribute.Enumeration<['se_connaitre', 'agir', 'gerer']> &
+      Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCompanionBookmarkCompanionBookmark extends Struct.CollectionTypeSchema {
   collectionName: 'companion_bookmarks';
   info: {
@@ -1346,6 +1384,38 @@ export interface ApiRecoveryRecommendationRecoveryRecommendation
   };
 }
 
+export interface ApiResourcePreferenceResourcePreference extends Struct.CollectionTypeSchema {
+  collectionName: 'resource_preferences';
+  info: {
+    description: 'Pr\u00E9f\u00E9rences du parcours ressources (questionnaire initial)';
+    displayName: 'Resource Preference';
+    pluralName: 'resource-preferences';
+    singularName: 'resource-preference';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    interests: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
+    knowledgeLevel: Schema.Attribute.Enumeration<['beginner', 'intermediate', 'advanced']> &
+      Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::resource-preference.resource-preference'
+    > &
+      Schema.Attribute.Private;
+    objective: Schema.Attribute.Enumeration<['inform', 'recover', 'train']> &
+      Schema.Attribute.Required;
+    owner: Schema.Attribute.Relation<'manyToOne', 'plugin::users-permissions.user'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSelfAssessmentSelfAssessment extends Struct.CollectionTypeSchema {
   collectionName: 'self_assessments';
   info: {
@@ -1747,6 +1817,10 @@ export interface ApiTagTag extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String & Schema.Attribute.Required & Schema.Attribute.Unique;
     newsItems: Schema.Attribute.Relation<'manyToMany', 'api::news-item.news-item'>;
     publishedAt: Schema.Attribute.DateTime;
+    resourcePreferences: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::resource-preference.resource-preference'
+    >;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
     tutorials: Schema.Attribute.Relation<'manyToMany', 'api::tutorial.tutorial'>;
     updatedAt: Schema.Attribute.DateTime;
@@ -2219,6 +2293,7 @@ declare module '@strapi/strapi' {
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::community-group.community-group': ApiCommunityGroupCommunityGroup;
       'api::community-profile.community-profile': ApiCommunityProfileCommunityProfile;
+      'api::companion-access.companion-access': ApiCompanionAccessCompanionAccess;
       'api::companion-bookmark.companion-bookmark': ApiCompanionBookmarkCompanionBookmark;
       'api::contribution.contribution': ApiContributionContribution;
       'api::contributor-profile.contributor-profile': ApiContributorProfileContributorProfile;
@@ -2237,6 +2312,7 @@ declare module '@strapi/strapi' {
       'api::platform-setting.platform-setting': ApiPlatformSettingPlatformSetting;
       'api::recovery-profile.recovery-profile': ApiRecoveryProfileRecoveryProfile;
       'api::recovery-recommendation.recovery-recommendation': ApiRecoveryRecommendationRecoveryRecommendation;
+      'api::resource-preference.resource-preference': ApiResourcePreferenceResourcePreference;
       'api::self-assessment.self-assessment': ApiSelfAssessmentSelfAssessment;
       'api::self-problem-solving.self-problem-solving': ApiSelfProblemSolvingSelfProblemSolving;
       'api::service-type.service-type': ApiServiceTypeServiceType;

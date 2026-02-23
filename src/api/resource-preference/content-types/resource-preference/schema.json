@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "resource_preferences",
+  "info": {
+    "singularName": "resource-preference",
+    "pluralName": "resource-preferences",
+    "displayName": "Resource Preference",
+    "description": "Préférences du parcours ressources (questionnaire initial)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "interests": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "resourcePreferences"
+    },
+    "knowledgeLevel": {
+      "type": "enumeration",
+      "enum": ["beginner", "intermediate", "advanced"],
+      "required": true
+    },
+    "objective": {
+      "type": "enumeration",
+      "enum": ["inform", "recover", "train"],
+      "required": true
+    }
+  }
+}

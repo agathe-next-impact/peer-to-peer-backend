@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "companion_accesses",
+  "info": {
+    "singularName": "companion-access",
+    "pluralName": "companion-accesses",
+    "displayName": "Companion Access",
+    "description": "Droits d'accès accordés par un membre à un compagnon sur ses sections Outils"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "companion": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "section": {
+      "type": "enumeration",
+      "enum": ["se_connaitre", "agir", "gerer"],
+      "required": true
+    },
+    "permission": {
+      "type": "enumeration",
+      "enum": ["read", "readwrite"],
+      "required": true,
+      "default": "read"
+    }
+  }
+}

@@ -75,7 +75,38 @@ async function configurePublicPermissions(strapi: Core.Strapi) {
     }
   }
 
-  strapi.log.info('Public API permissions configured');
+  // Ensure auth endpoints are enabled for Public role
+  const authActions = [
+    'plugin::users-permissions.auth.callback',
+    'plugin::users-permissions.auth.register',
+    'plugin::users-permissions.auth.forgotPassword',
+    'plugin::users-permissions.auth.resetPassword',
+  ];
+
+  for (const action of authActions) {
+    const permission = await strapi.db
+      .query('plugin::users-permissions.permission')
+      .findOne({
+        where: { role: publicRole.id, action },
+      });
+
+    if (!permission) {
+      await strapi.db
+        .query('plugin::users-permissions.permission')
+        .create({
+          data: { role: publicRole.id, action, enabled: true },
+        });
+    } else if (!permission.enabled) {
+      await strapi.db
+        .query('plugin::users-permissions.permission')
+        .update({
+          where: { id: permission.id },
+          data: { enabled: true },
+        });
+    }
+  }
+
+  strapi.log.info('Public API permissions configured (including auth)');
 }
 
 async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
@@ -100,6 +131,7 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::self-problem-solving.self-problem-solving',
     'api::early-warning-sign.early-warning-sign',
     'api::companion-bookmark.companion-bookmark',
+    'api::companion-access.companion-access',
     'api::event-registration.event-registration',
     'api::community-profile.community-profile',
     'api::community-group.community-group',
@@ -136,6 +168,32 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
             data: { enabled: true },
           });
       }
+    }
+  }
+
+  // Custom action: companion-access.findGrantedToMe
+  const customActions = [
+    'api::companion-access.companion-access.findGrantedToMe',
+  ];
+  for (const action of customActions) {
+    const permission = await strapi.db
+      .query('plugin::users-permissions.permission')
+      .findOne({
+        where: { role: authenticatedRole.id, action },
+      });
+    if (!permission) {
+      await strapi.db
+        .query('plugin::users-permissions.permission')
+        .create({
+          data: { role: authenticatedRole.id, action, enabled: true },
+        });
+    } else if (!permission.enabled) {
+      await strapi.db
+        .query('plugin::users-permissions.permission')
+        .update({
+          where: { id: permission.id },
+          data: { enabled: true },
+        });
     }
   }
 

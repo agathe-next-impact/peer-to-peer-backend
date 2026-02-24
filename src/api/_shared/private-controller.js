@@ -41,6 +41,8 @@ const SECTION_MAP = {
     'api::personal-notebook.personal-notebook',
     'api::personal-calendar-event.personal-calendar-event',
     'api::recovery-profile.recovery-profile',
+    'api::wellness-checkin.wellness-checkin',
+    'api::wellness-tracker-config.wellness-tracker-config',
   ],
 };
 
@@ -75,6 +77,14 @@ function createPrivateController(uid) {
 
     // Récupérer les champs chiffrés pour ce content-type
     const { fields: encryptedFields } = getEncryptionInfo(uid, strapi);
+
+    // Détecter les champs relation non-owner du schéma.
+    // sanitizeInput supprime les relations (owner, mais aussi template, observation…).
+    // On les ré-injecte après sanitization dans create/update.
+    const schema = strapi.contentType(uid);
+    const nonOwnerRelationFields = Object.entries(schema.attributes || {})
+      .filter(([key, attr]) => attr.type === 'relation' && key !== 'owner')
+      .map(([key]) => key);
 
     // Section à laquelle appartient ce content-type (pour vérification companion-access)
     const contentTypeSection = getSectionForUid(uid);
@@ -191,6 +201,7 @@ function createPrivateController(uid) {
           ownerId = Number(sharedBy);
         }
 
+        const rawData = ctx.request.body?.data || {};
         const sanitizedBody = await this.sanitizeInput(ctx.request.body, ctx);
 
         // Valider les champs JSON avant persistence
@@ -200,8 +211,15 @@ function createPrivateController(uid) {
           return ctx.badRequest(err.message);
         }
 
-        // Force le owner APRÈS la sanitization (la sanitization le supprime)
+        // Force le owner APRÈS la sanitization (la sanitization le supprime).
+        // Ré-injecte aussi les relations non-owner (template, observation…)
+        // que sanitizeInput supprime également.
         const data = { ...(sanitizedBody.data || {}), owner: ownerId };
+        for (const field of nonOwnerRelationFields) {
+          if (rawData[field] !== undefined && data[field] === undefined) {
+            data[field] = rawData[field];
+          }
+        }
 
         const entity = await strapi.documents(uid).create({ data });
         const decryptedEntity = decryptEntity(entity);
@@ -234,6 +252,7 @@ function createPrivateController(uid) {
 
         // Sanitize puis appeler le service
         const sanitizedQuery = await this.sanitizeQuery(ctx);
+        const rawUpdateData = ctx.request.body?.data || {};
         const sanitizedBody = await this.sanitizeInput(ctx.request.body, ctx);
 
         // Valider les champs JSON avant persistence
@@ -241,6 +260,15 @@ function createPrivateController(uid) {
           validateJsonFields(sanitizedBody.data || {}, uid, strapi);
         } catch (err) {
           return ctx.badRequest(err.message);
+        }
+
+        // Ré-injecter les relations non-owner supprimées par sanitizeInput
+        if (sanitizedBody.data) {
+          for (const field of nonOwnerRelationFields) {
+            if (rawUpdateData[field] !== undefined && sanitizedBody.data[field] === undefined) {
+              sanitizedBody.data[field] = rawUpdateData[field];
+            }
+          }
         }
 
         const entity = await strapi.service(uid).update(documentId, {

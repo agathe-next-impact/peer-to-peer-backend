@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wellness_tracker_configs",
+  "info": {
+    "singularName": "wellness-tracker-config",
+    "pluralName": "wellness-tracker-configs",
+    "displayName": "Wellness Tracker Config",
+    "description": "Configuration personnalisée du tracker d'hygiène de vie"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": ["settings"]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "settings": {
+      "type": "json",
+      "required": true
+    }
+  }
+}

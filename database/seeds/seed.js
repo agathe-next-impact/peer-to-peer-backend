@@ -557,26 +557,32 @@ async function seed() {
     }
   }
 
-  // --- Assessment Templates ---
-  console.log('\n📊 Création des modèles d\'autoévaluation...');
+  // --- Assessment Templates (upsert : crée ou met à jour) ---
+  console.log('\n📊 Création / mise à jour des modèles d\'autoévaluation...');
   for (const tpl of assessmentTemplates) {
+    const tplData = {
+      name: tpl.name,
+      slug: tpl.slug,
+      description: tpl.description,
+      version: tpl.version,
+      scoringMethod: tpl.scoringMethod,
+      dimensions: tpl.dimensions,
+      questions: tpl.questions.map((q) => ({ ...q, isRequired: true })),
+      isActive: true,
+    };
+
     const existing = await strapi.documents('api::assessment-template.assessment-template').findFirst({
       filters: { slug: tpl.slug },
     });
     if (existing) {
-      console.log(`   ⏭  ${tpl.name} (existe déjà)`);
+      await strapi.documents('api::assessment-template.assessment-template').update({
+        documentId: existing.documentId,
+        data: tplData,
+      });
+      console.log(`   🔄 ${tpl.name} (mis à jour + réactivé)`);
     } else {
       await strapi.documents('api::assessment-template.assessment-template').create({
-        data: {
-          name: tpl.name,
-          slug: tpl.slug,
-          description: tpl.description,
-          version: tpl.version,
-          scoringMethod: tpl.scoringMethod,
-          dimensions: tpl.dimensions,
-          questions: tpl.questions.map((q) => ({ ...q, isRequired: true })),
-          isActive: true,
-        },
+        data: tplData,
       });
       console.log(`   ✅ ${tpl.name}`);
     }

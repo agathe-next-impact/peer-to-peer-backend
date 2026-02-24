@@ -15,7 +15,8 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry",
     "generate:schemas": "node scripts/generate-strapi-schemas.js --output ./src",
     "generate:schemas:dry": "node scripts/generate-strapi-schemas.js --output ./src --dry-run",
-    "seed": "node database/seeds/seed.js"
+    "seed": "node database/seeds/seed.js",
+    "seed:wellness": "node database/seeds/seed-wellness.js"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.36.0",

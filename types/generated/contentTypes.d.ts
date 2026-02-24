@@ -1858,6 +1858,83 @@ export interface ApiTutorialTutorial extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiWellnessCheckinWellnessCheckin extends Struct.CollectionTypeSchema {
+  collectionName: 'wellness_checkins';
+  info: {
+    description: "Saisie quotidienne d'hygi\u00E8ne de vie";
+    displayName: 'Wellness Checkin';
+    pluralName: 'wellness-checkins';
+    singularName: 'wellness-checkin';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+    encryption: {
+      enabled: true;
+      fields: ['notes', 'data'];
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    data: Schema.Attribute.JSON & Schema.Attribute.Required;
+    date: Schema.Attribute.Date & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::wellness-checkin.wellness-checkin'
+    > &
+      Schema.Attribute.Private;
+    notes: Schema.Attribute.Text;
+    overallMood: Schema.Attribute.Integer;
+    owner: Schema.Attribute.Relation<'manyToOne', 'plugin::users-permissions.user'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
+export interface ApiWellnessTrackerConfigWellnessTrackerConfig extends Struct.CollectionTypeSchema {
+  collectionName: 'wellness_tracker_configs';
+  info: {
+    description: "Configuration personnalis\u00E9e du tracker d'hygi\u00E8ne de vie";
+    displayName: 'Wellness Tracker Config';
+    pluralName: 'wellness-tracker-configs';
+    singularName: 'wellness-tracker-config';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+    encryption: {
+      enabled: true;
+      fields: ['settings'];
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::wellness-tracker-config.wellness-tracker-config'
+    > &
+      Schema.Attribute.Private;
+    owner: Schema.Attribute.Relation<'oneToOne', 'plugin::users-permissions.user'>;
+    publishedAt: Schema.Attribute.DateTime;
+    settings: Schema.Attribute.JSON & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
   info: {
@@ -2322,6 +2399,8 @@ declare module '@strapi/strapi' {
       'api::structure.structure': ApiStructureStructure;
       'api::tag.tag': ApiTagTag;
       'api::tutorial.tutorial': ApiTutorialTutorial;
+      'api::wellness-checkin.wellness-checkin': ApiWellnessCheckinWellnessCheckin;
+      'api::wellness-tracker-config.wellness-tracker-config': ApiWellnessTrackerConfigWellnessTrackerConfig;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

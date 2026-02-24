@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wellness_checkins",
+  "info": {
+    "singularName": "wellness-checkin",
+    "pluralName": "wellness-checkins",
+    "displayName": "Wellness Checkin",
+    "description": "Saisie quotidienne d'hygiène de vie"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": ["notes", "data"]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "data": {
+      "type": "json",
+      "required": true
+    },
+    "notes": {
+      "type": "text"
+    },
+    "overallMood": {
+      "type": "integer"
+    }
+  }
+}

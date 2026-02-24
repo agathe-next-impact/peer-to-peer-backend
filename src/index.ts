@@ -135,6 +135,8 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::event-registration.event-registration',
     'api::community-profile.community-profile',
     'api::community-group.community-group',
+    'api::wellness-checkin.wellness-checkin',
+    'api::wellness-tracker-config.wellness-tracker-config',
   ];
 
   const crudActions = ['find', 'findOne', 'create', 'update', 'delete'];
@@ -171,7 +173,7 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     }
   }
 
-  // Custom action: companion-access.findGrantedToMe
+  // Custom actions
   const customActions = [
     'api::companion-access.companion-access.findGrantedToMe',
   ];

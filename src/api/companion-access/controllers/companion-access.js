@@ -22,6 +22,19 @@ module.exports = createCoreController(UID, ({ strapi }) => ({
 
     const { results, pagination } = await strapi.service(UID).find(sanitizedQuery);
     const sanitizedResults = await this.sanitizeOutput(results, ctx);
+
+    // Ré-injecter companion après sanitisation
+    // (sanitizeOutput strip les relations users-permissions)
+    for (let i = 0; i < sanitizedResults.length; i++) {
+      if (results[i]?.companion) {
+        sanitizedResults[i].companion = {
+          id: results[i].companion.id,
+          username: results[i].companion.username,
+          email: results[i].companion.email,
+        };
+      }
+    }
+
     return this.transformResponse(sanitizedResults, { pagination });
   },
 
@@ -37,6 +50,19 @@ module.exports = createCoreController(UID, ({ strapi }) => ({
     });
 
     const sanitizedResults = await this.sanitizeOutput(entries, ctx);
+
+    // Ré-injecter owner après sanitisation
+    // (sanitizeOutput strip les relations users-permissions)
+    for (let i = 0; i < sanitizedResults.length; i++) {
+      if (entries[i]?.owner) {
+        sanitizedResults[i].owner = {
+          id: entries[i].owner.id,
+          username: entries[i].owner.username,
+          email: entries[i].owner.email,
+        };
+      }
+    }
+
     return this.transformResponse(sanitizedResults);
   },
 

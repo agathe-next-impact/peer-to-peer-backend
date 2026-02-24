@@ -4,13 +4,26 @@ const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::community-profile.community-profile', ({ strapi }) => ({
 
-  // Public read — only visible profiles
+  /**
+   * find — si ?mine=true et utilisateur connecté, retourne le profil de
+   * l'utilisateur (même non visible). Sinon, retourne les profils visibles.
+   */
   async find(ctx) {
     const sanitizedQuery = await this.sanitizeQuery(ctx);
-    sanitizedQuery.filters = {
-      ...(sanitizedQuery.filters || {}),
-      isVisible: true,
-    };
+
+    if (ctx.query.mine === 'true' && ctx.state.user) {
+      sanitizedQuery.filters = {
+        ...(sanitizedQuery.filters || {}),
+        user: { id: ctx.state.user.id },
+      };
+      sanitizedQuery.pagination = { limit: 1 };
+    } else {
+      sanitizedQuery.filters = {
+        ...(sanitizedQuery.filters || {}),
+        isVisible: true,
+      };
+    }
+
     const { results, pagination } = await strapi
       .service('api::community-profile.community-profile')
       .find(sanitizedQuery);
@@ -18,15 +31,26 @@ module.exports = createCoreController('api::community-profile.community-profile'
     return this.transformResponse(sanitizedResults, { pagination });
   },
 
-  // Public read — only if visible
+  // findOne — profil visible uniquement (+ flag isOwnProfile)
   async findOne(ctx) {
     const { id: documentId } = ctx.params;
     const sanitizedQuery = await this.sanitizeQuery(ctx);
+
     const entity = await strapi
       .service('api::community-profile.community-profile')
-      .findOne(documentId, sanitizedQuery);
+      .findOne(documentId, {
+        ...sanitizedQuery,
+        populate: { ...(sanitizedQuery.populate || {}), user: { fields: ['id'] } },
+      });
     if (!entity || !entity.isVisible) return ctx.notFound();
+
     const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
+
+    // Indicateur pour le frontend (n'expose pas le userId)
+    if (ctx.state.user && entity.user?.id === ctx.state.user.id) {
+      sanitizedEntity.isOwnProfile = true;
+    }
+
     return this.transformResponse(sanitizedEntity);
   },
 

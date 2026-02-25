@@ -7,6 +7,7 @@ module.exports = createCoreController('api::community-profile.community-profile'
   /**
    * find — si ?mine=true et utilisateur connecté, retourne le profil de
    * l'utilisateur (même non visible). Sinon, retourne les profils visibles.
+   * Si ?community=<documentId>, filtre par membres de cette communauté.
    */
   async find(ctx) {
     const sanitizedQuery = await this.sanitizeQuery(ctx);
@@ -17,10 +18,25 @@ module.exports = createCoreController('api::community-profile.community-profile'
         user: { id: ctx.state.user.id },
       };
       sanitizedQuery.pagination = { limit: 1 };
+    } else if (ctx.query.community && ctx.state.user) {
+      // Filter by community membership — only visible members
+      sanitizedQuery.filters = {
+        ...(sanitizedQuery.filters || {}),
+        isVisible: true,
+        communities: { documentId: ctx.query.community },
+      };
     } else {
       sanitizedQuery.filters = {
         ...(sanitizedQuery.filters || {}),
         isVisible: true,
+      };
+    }
+
+    // Search by pseudonym (for invitation dialog)
+    if (ctx.query.search) {
+      sanitizedQuery.filters = {
+        ...(sanitizedQuery.filters || {}),
+        pseudonym: { $containsi: ctx.query.search },
       };
     }
 

@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "community_invitations",
+  "info": {
+    "singularName": "community-invitation",
+    "pluralName": "community-invitations",
+    "displayName": "Community Invitation"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "community": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community.community"
+    },
+    "invitedProfile": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community-profile.community-profile"
+    },
+    "invitedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community-profile.community-profile"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "accepted", "rejected"],
+      "default": "pending",
+      "required": true
+    },
+    "message": {
+      "type": "text"
+    }
+  }
+}

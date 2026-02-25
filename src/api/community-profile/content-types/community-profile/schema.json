@@ -66,6 +66,18 @@
     },
     "joinedAt": {
       "type": "date"
+    },
+    "communities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::community.community",
+      "mappedBy": "members"
+    },
+    "adminOfCommunities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::community.community",
+      "mappedBy": "admins"
     }
   }
 }

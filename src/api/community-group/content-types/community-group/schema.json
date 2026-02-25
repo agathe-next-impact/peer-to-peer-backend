@@ -70,6 +70,12 @@
       "enum": ["draft", "active", "archived", "cancelled"],
       "default": "draft",
       "required": true
+    },
+    "community": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community.community",
+      "inversedBy": "reunions"
     }
   }
 }

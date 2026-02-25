@@ -531,6 +531,7 @@ export interface ApiCommunityGroupCommunityGroup extends Struct.CollectionTypeSc
     draftAndPublish: true;
   };
   attributes: {
+    community: Schema.Attribute.Relation<'manyToOne', 'api::community.community'>;
     coverImage: Schema.Attribute.Media<'images'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
@@ -561,6 +562,41 @@ export interface ApiCommunityGroupCommunityGroup extends Struct.CollectionTypeSc
   };
 }
 
+export interface ApiCommunityInvitationCommunityInvitation extends Struct.CollectionTypeSchema {
+  collectionName: 'community_invitations';
+  info: {
+    displayName: 'Community Invitation';
+    pluralName: 'community-invitations';
+    singularName: 'community-invitation';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    community: Schema.Attribute.Relation<'manyToOne', 'api::community.community'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    invitedBy: Schema.Attribute.Relation<'manyToOne', 'api::community-profile.community-profile'>;
+    invitedProfile: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::community-profile.community-profile'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::community-invitation.community-invitation'
+    > &
+      Schema.Attribute.Private;
+    message: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<['pending', 'accepted', 'rejected']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'pending'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCommunityProfileCommunityProfile extends Struct.CollectionTypeSchema {
   collectionName: 'community_profiles';
   info: {
@@ -573,8 +609,10 @@ export interface ApiCommunityProfileCommunityProfile extends Struct.CollectionTy
     draftAndPublish: false;
   };
   attributes: {
+    adminOfCommunities: Schema.Attribute.Relation<'manyToMany', 'api::community.community'>;
     avatar: Schema.Attribute.Media<'images'>;
     bio: Schema.Attribute.Text;
+    communities: Schema.Attribute.Relation<'manyToMany', 'api::community.community'>;
     companionSince: Schema.Attribute.Date;
     contactPreference: Schema.Attribute.Enumeration<['platform_message', 'email', 'none']> &
       Schema.Attribute.DefaultTo<'none'>;
@@ -600,6 +638,36 @@ export interface ApiCommunityProfileCommunityProfile extends Struct.CollectionTy
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     user: Schema.Attribute.Relation<'oneToOne', 'plugin::users-permissions.user'>;
+  };
+}
+
+export interface ApiCommunityCommunity extends Struct.CollectionTypeSchema {
+  collectionName: 'communities';
+  info: {
+    description: 'Communaut\u00E9 regroupant des compagnons';
+    displayName: 'Community';
+    pluralName: 'communities';
+    singularName: 'community';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    admins: Schema.Attribute.Relation<'manyToMany', 'api::community-profile.community-profile'>;
+    coverImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::community.community'> &
+      Schema.Attribute.Private;
+    members: Schema.Attribute.Relation<'manyToMany', 'api::community-profile.community-profile'>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    reunions: Schema.Attribute.Relation<'oneToMany', 'api::community-group.community-group'>;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
   };
 }
 
@@ -2369,7 +2437,9 @@ declare module '@strapi/strapi' {
       'api::blog-article.blog-article': ApiBlogArticleBlogArticle;
       'api::blog-category.blog-category': ApiBlogCategoryBlogCategory;
       'api::community-group.community-group': ApiCommunityGroupCommunityGroup;
+      'api::community-invitation.community-invitation': ApiCommunityInvitationCommunityInvitation;
       'api::community-profile.community-profile': ApiCommunityProfileCommunityProfile;
+      'api::community.community': ApiCommunityCommunity;
       'api::companion-access.companion-access': ApiCompanionAccessCompanionAccess;
       'api::companion-bookmark.companion-bookmark': ApiCompanionBookmarkCompanionBookmark;
       'api::contribution.contribution': ApiContributionContribution;

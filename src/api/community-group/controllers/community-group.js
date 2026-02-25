@@ -26,9 +26,17 @@ module.exports = createCoreController('api::community-group.community-group', ({
     return this.transformResponse(sanitizedEntity);
   },
 
-  // Auth required — set createdByMember from user's community profile
+  // Auth required — only community admins can create reunions
   async create(ctx) {
     if (!ctx.state.user) return ctx.forbidden();
+
+    const sanitizedBody = await this.sanitizeInput(ctx.request.body, ctx);
+    const data = sanitizedBody.data || {};
+
+    // A community must be specified
+    if (!data.community) {
+      return ctx.badRequest('Une réunion doit être rattachée à une communauté.');
+    }
 
     // Find the user's community profile
     const profiles = await strapi.documents('api::community-profile.community-profile').findMany({
@@ -37,30 +45,49 @@ module.exports = createCoreController('api::community-group.community-group', ({
     });
     const myProfile = profiles[0];
     if (!myProfile) {
-      return ctx.badRequest('Vous devez créer un profil communautaire avant de créer un groupe.');
+      return ctx.badRequest('Vous devez créer un profil communautaire avant de créer une réunion.');
     }
 
-    const sanitizedBody = await this.sanitizeInput(ctx.request.body, ctx);
-    const data = {
-      ...(sanitizedBody.data || {}),
+    // Check that user is admin of the specified community
+    const community = await strapi.documents('api::community.community').findOne({
+      documentId: data.community,
+      populate: { admins: { populate: { user: { fields: ['id'] } } } },
+    });
+    if (!community) {
+      return ctx.badRequest('Communauté introuvable.');
+    }
+
+    const isAdmin = (community.admins || []).some((a) => a.user?.id === ctx.state.user.id);
+    if (!isAdmin) {
+      return ctx.forbidden('Seuls les administrateurs de la communauté peuvent créer des réunions.');
+    }
+
+    const createData = {
+      ...data,
       createdByMember: myProfile.documentId,
     };
-    const entity = await strapi.documents('api::community-group.community-group').create({ data });
+    const entity = await strapi.documents('api::community-group.community-group').create({ data: createData });
     const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
     return this.transformResponse(sanitizedEntity);
   },
 
-  // Auth required — verify ownership via createdByMember
+  // Auth required — verify creator or community admin
   async update(ctx) {
     if (!ctx.state.user) return ctx.forbidden();
     const { id: documentId } = ctx.params;
 
     const existing = await strapi.documents('api::community-group.community-group').findOne({
       documentId,
-      populate: { createdByMember: { populate: { user: { fields: ['id'] } } } },
+      populate: {
+        createdByMember: { populate: { user: { fields: ['id'] } } },
+        community: { populate: { admins: { populate: { user: { fields: ['id'] } } } } },
+      },
     });
     if (!existing) return ctx.notFound();
-    if (!existing.createdByMember || existing.createdByMember.user?.id !== ctx.state.user.id) {
+
+    const isCreator = existing.createdByMember?.user?.id === ctx.state.user.id;
+    const isAdmin = (existing.community?.admins || []).some((a) => a.user?.id === ctx.state.user.id);
+    if (!isCreator && !isAdmin) {
       return ctx.forbidden();
     }
 
@@ -73,17 +100,23 @@ module.exports = createCoreController('api::community-group.community-group', ({
     return this.transformResponse(sanitizedEntity);
   },
 
-  // Auth required — verify ownership via createdByMember
+  // Auth required — verify creator or community admin
   async delete(ctx) {
     if (!ctx.state.user) return ctx.forbidden();
     const { id: documentId } = ctx.params;
 
     const existing = await strapi.documents('api::community-group.community-group').findOne({
       documentId,
-      populate: { createdByMember: { populate: { user: { fields: ['id'] } } } },
+      populate: {
+        createdByMember: { populate: { user: { fields: ['id'] } } },
+        community: { populate: { admins: { populate: { user: { fields: ['id'] } } } } },
+      },
     });
     if (!existing) return ctx.notFound();
-    if (!existing.createdByMember || existing.createdByMember.user?.id !== ctx.state.user.id) {
+
+    const isCreator = existing.createdByMember?.user?.id === ctx.state.user.id;
+    const isAdmin = (existing.community?.admins || []).some((a) => a.user?.id === ctx.state.user.id);
+    if (!isCreator && !isAdmin) {
       return ctx.forbidden();
     }
 

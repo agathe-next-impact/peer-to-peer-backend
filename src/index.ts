@@ -41,6 +41,7 @@ async function configurePublicPermissions(strapi: Core.Strapi) {
     'api::homepage.homepage',
     'api::community-profile.community-profile',
     'api::community-group.community-group',
+    'api::community.community',
   ];
 
   for (const uid of publicContentTypes) {
@@ -135,6 +136,8 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::event-registration.event-registration',
     'api::community-profile.community-profile',
     'api::community-group.community-group',
+    'api::community.community',
+    'api::community-invitation.community-invitation',
     'api::wellness-checkin.wellness-checkin',
     'api::wellness-tracker-config.wellness-tracker-config',
   ];
@@ -176,6 +179,11 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
   // Custom actions
   const customActions = [
     'api::companion-access.companion-access.findGrantedToMe',
+    'api::community.community.join',
+    'api::community.community.leave',
+    'api::community-invitation.community-invitation.invite',
+    'api::community-invitation.community-invitation.accept',
+    'api::community-invitation.community-invitation.reject',
   ];
   for (const action of customActions) {
     const permission = await strapi.db
@@ -216,6 +224,7 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::homepage.homepage',
     'api::community-profile.community-profile',
     'api::community-group.community-group',
+    'api::community.community',
   ];
 
   for (const uid of publicContentTypes) {

@@ -32,6 +32,7 @@ const SECTION_MAP = {
     'api::early-warning-sign.early-warning-sign',
     'api::situation-thesaurus.situation-thesaurus',
     'api::situation-objective.situation-objective',
+    'api::recovery-profile.recovery-profile',
   ],
   agir: [
     'api::personal-goal.personal-goal',
@@ -47,13 +48,15 @@ const SECTION_MAP = {
 };
 
 /**
- * Trouve la section à laquelle appartient un content-type UID.
+ * Trouve toutes les sections auxquelles appartient un content-type UID.
+ * Un UID peut apparaître dans plusieurs sections (ex: recovery-profile).
  */
-function getSectionForUid(uid) {
+function getSectionsForUid(uid) {
+  const sections = [];
   for (const [section, uids] of Object.entries(SECTION_MAP)) {
-    if (uids.includes(uid)) return section;
+    if (uids.includes(uid)) sections.push(section);
   }
-  return null;
+  return sections;
 }
 
 /**
@@ -86,8 +89,8 @@ function createPrivateController(uid) {
       .filter(([key, attr]) => attr.type === 'relation' && key !== 'owner')
       .map(([key]) => key);
 
-    // Section à laquelle appartient ce content-type (pour vérification companion-access)
-    const contentTypeSection = getSectionForUid(uid);
+    // Sections auxquelles appartient ce content-type (pour vérification companion-access)
+    const contentTypeSections = getSectionsForUid(uid);
 
     /**
      * Déchiffre les champs sensibles d'une entité.
@@ -107,22 +110,25 @@ function createPrivateController(uid) {
 
     /**
      * Vérifie l'accès compagnon pour le shared_by courant.
-     * Retourne l'objet access ou ctx.forbidden() si refusé.
+     * Itère sur toutes les sections possibles du content-type.
+     * Retourne l'objet access ou null si aucun accès valide.
      * @param {string} minPermission - 'read' ou 'readwrite'
      */
     async function checkSharedAccess(ctx, sharedByUserId, minPermission) {
-      if (!contentTypeSection) return null; // content-type non mappé
+      if (contentTypeSections.length === 0) return null; // content-type non mappé
 
-      const access = await getCompanionAccess(
-        ctx.state.user.id,
-        Number(sharedByUserId),
-        contentTypeSection,
-        strapi
-      );
-
-      if (!access) return null;
-      if (minPermission === 'readwrite' && access.permission !== 'readwrite') return null;
-      return access;
+      for (const section of contentTypeSections) {
+        const access = await getCompanionAccess(
+          ctx.state.user.id,
+          Number(sharedByUserId),
+          section,
+          strapi
+        );
+        if (!access) continue;
+        if (minPermission === 'readwrite' && access.permission !== 'readwrite') continue;
+        return access;
+      }
+      return null;
     }
 
     return {

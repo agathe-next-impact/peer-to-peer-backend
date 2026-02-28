@@ -185,5 +185,83 @@ module.exports = createCoreController(uid, ({ strapi }) => {
       const sanitizedEntity = await this.sanitizeOutput(decryptedEntity, ctx);
       return this.transformResponse(sanitizedEntity);
     },
+
+    // ── REVOKE (bilateral) ────────────────────────────────────────────────
+    async revoke(ctx) {
+      if (!ctx.state.user) return ctx.forbidden();
+
+      const { id: documentId } = ctx.params;
+      const currentUserId = ctx.state.user.id;
+
+      const ACCESS_UID = 'api::companion-access.companion-access';
+      const REQUEST_UID = 'api::companion-request.companion-request';
+
+      // 1. Trouver le bookmark avec owner + companion.user
+      const bookmark = await strapi.documents(uid).findOne({
+        documentId,
+        populate: {
+          owner: { fields: ['id'] },
+          companion: { populate: { user: { fields: ['id'] } } },
+        },
+      });
+
+      if (!bookmark || bookmark.owner?.id !== currentUserId) {
+        return ctx.forbidden();
+      }
+
+      const otherUserId = bookmark.companion?.user?.id;
+      if (!otherUserId) {
+        return ctx.badRequest('Impossible de déterminer l\'autre utilisateur.');
+      }
+
+      // 2. Supprimer le bookmark du user courant
+      await strapi.documents(uid).delete({ documentId });
+
+      // 3. Trouver et supprimer le bookmark inverse (other → current)
+      const reverseBookmarks = await strapi.documents(uid).findMany({
+        filters: { owner: { id: otherUserId } },
+        populate: { companion: { populate: { user: { fields: ['id'] } } } },
+      });
+      for (const rb of reverseBookmarks) {
+        if (rb.companion?.user?.id === currentUserId) {
+          await strapi.documents(uid).delete({ documentId: rb.documentId });
+        }
+      }
+
+      // 4. Supprimer tous les CompanionAccess current → other
+      const accessesAB = await strapi.documents(ACCESS_UID).findMany({
+        filters: { owner: { id: currentUserId }, companion: { id: otherUserId } },
+      });
+      for (const a of accessesAB) {
+        await strapi.documents(ACCESS_UID).delete({ documentId: a.documentId });
+      }
+
+      // 5. Supprimer tous les CompanionAccess other → current
+      const accessesBA = await strapi.documents(ACCESS_UID).findMany({
+        filters: { owner: { id: otherUserId }, companion: { id: currentUserId } },
+      });
+      for (const a of accessesBA) {
+        await strapi.documents(ACCESS_UID).delete({ documentId: a.documentId });
+      }
+
+      // 6. Mettre à jour les CompanionRequest accepted entre les deux → cancelled
+      const requests = await strapi.documents(REQUEST_UID).findMany({
+        filters: {
+          status: 'accepted',
+          $or: [
+            { requester: { id: currentUserId }, target: { id: otherUserId } },
+            { requester: { id: otherUserId }, target: { id: currentUserId } },
+          ],
+        },
+      });
+      for (const r of requests) {
+        await strapi.documents(REQUEST_UID).update({
+          documentId: r.documentId,
+          data: { status: 'cancelled' },
+        });
+      }
+
+      return { data: null };
+    },
   };
 });

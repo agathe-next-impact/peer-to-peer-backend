@@ -5,7 +5,7 @@
     "singularName": "self-problem-solving",
     "pluralName": "self-problem-solvings",
     "displayName": "Self Problem Solving",
-    "description": "Atelier des Solutions — résolution de problèmes en 6 étapes"
+    "description": "Atelier des Solutions — aide à la décision en 3 étapes + évaluation"
   },
   "options": {
     "draftAndPublish": false
@@ -63,7 +63,7 @@
       "type": "integer",
       "default": 1,
       "min": 1,
-      "max": 6,
+      "max": 4,
       "required": true
     },
     "status": {

@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "companion_requests",
+  "info": {
+    "singularName": "companion-request",
+    "pluralName": "companion-requests",
+    "displayName": "Companion Request",
+    "description": "Demandes de compagnonnage entre membres"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    }
+  },
+  "attributes": {
+    "requester": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "target": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "accepted", "rejected", "cancelled"],
+      "default": "pending",
+      "required": true
+    },
+    "message": {
+      "type": "text"
+    }
+  }
+}

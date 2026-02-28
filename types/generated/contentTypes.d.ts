@@ -749,6 +749,43 @@ export interface ApiCompanionBookmarkCompanionBookmark extends Struct.Collection
   };
 }
 
+export interface ApiCompanionRequestCompanionRequest extends Struct.CollectionTypeSchema {
+  collectionName: 'companion_requests';
+  info: {
+    description: 'Demandes de compagnonnage entre membres';
+    displayName: 'Companion Request';
+    pluralName: 'companion-requests';
+    singularName: 'companion-request';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::companion-request.companion-request'
+    > &
+      Schema.Attribute.Private;
+    message: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    requester: Schema.Attribute.Relation<'manyToOne', 'plugin::users-permissions.user'>;
+    status: Schema.Attribute.Enumeration<['pending', 'accepted', 'rejected', 'cancelled']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'pending'>;
+    target: Schema.Attribute.Relation<'manyToOne', 'plugin::users-permissions.user'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
 export interface ApiContributionContribution extends Struct.CollectionTypeSchema {
   collectionName: 'contributions';
   info: {
@@ -1529,7 +1566,7 @@ export interface ApiSelfAssessmentSelfAssessment extends Struct.CollectionTypeSc
 export interface ApiSelfProblemSolvingSelfProblemSolving extends Struct.CollectionTypeSchema {
   collectionName: 'self_problem_solvings';
   info: {
-    description: 'Atelier des Solutions \u2014 r\u00E9solution de probl\u00E8mes en 6 \u00E9tapes';
+    description: 'Atelier des Solutions \u2014 aide \u00E0 la d\u00E9cision en 3 \u00E9tapes + \u00E9valuation';
     displayName: 'Self Problem Solving';
     pluralName: 'self-problem-solvings';
     singularName: 'self-problem-solving';
@@ -1584,7 +1621,7 @@ export interface ApiSelfProblemSolvingSelfProblemSolving extends Struct.Collecti
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
         {
-          max: 6;
+          max: 4;
           min: 1;
         },
         number
@@ -2442,6 +2479,7 @@ declare module '@strapi/strapi' {
       'api::community.community': ApiCommunityCommunity;
       'api::companion-access.companion-access': ApiCompanionAccessCompanionAccess;
       'api::companion-bookmark.companion-bookmark': ApiCompanionBookmarkCompanionBookmark;
+      'api::companion-request.companion-request': ApiCompanionRequestCompanionRequest;
       'api::contribution.contribution': ApiContributionContribution;
       'api::contributor-profile.contributor-profile': ApiContributorProfileContributorProfile;
       'api::document-template.document-template': ApiDocumentTemplateDocumentTemplate;

@@ -140,6 +140,7 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::community-invitation.community-invitation',
     'api::wellness-checkin.wellness-checkin',
     'api::wellness-tracker-config.wellness-tracker-config',
+    'api::companion-request.companion-request',
   ];
 
   const crudActions = ['find', 'findOne', 'create', 'update', 'delete'];
@@ -184,6 +185,13 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::community-invitation.community-invitation.invite',
     'api::community-invitation.community-invitation.accept',
     'api::community-invitation.community-invitation.reject',
+    'api::companion-request.companion-request.send',
+    'api::companion-request.companion-request.findReceived',
+    'api::companion-request.companion-request.findSent',
+    'api::companion-request.companion-request.accept',
+    'api::companion-request.companion-request.reject',
+    'api::companion-request.companion-request.cancel',
+    'api::companion-bookmark.companion-bookmark.revoke',
   ];
   for (const action of customActions) {
     const permission = await strapi.db

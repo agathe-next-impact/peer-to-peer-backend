@@ -956,6 +956,7 @@ export interface ApiEventRegistrationEventRegistration extends Struct.Collection
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
+    invitedBy: Schema.Attribute.Relation<'manyToOne', 'api::community-profile.community-profile'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -969,9 +970,11 @@ export interface ApiEventRegistrationEventRegistration extends Struct.Collection
     >;
     publishedAt: Schema.Attribute.DateTime;
     registeredAt: Schema.Attribute.DateTime;
-    status: Schema.Attribute.Enumeration<['registered', 'waitlisted', 'cancelled']> &
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'registered', 'waitlisted', 'rejected', 'cancelled']
+    > &
       Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'registered'>;
+      Schema.Attribute.DefaultTo<'pending'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
   };

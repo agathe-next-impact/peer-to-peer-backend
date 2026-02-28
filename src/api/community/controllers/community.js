@@ -32,9 +32,24 @@ module.exports = createCoreController('api::community.community', ({ strapi }) =
     return this.transformResponse(sanitizedEntity);
   },
 
-  // Auth required — create community, set creator as admin
+  // Auth required — only accompagnants can create communities
   async create(ctx) {
     if (!ctx.state.user) return ctx.forbidden();
+
+    // Vérifier que l'utilisateur est un accompagnant
+    // (a envoyé au moins une demande de compagnonnage acceptée)
+    const acceptedRequests = await strapi
+      .documents('api::companion-request.companion-request')
+      .findMany({
+        filters: {
+          requester: { id: ctx.state.user.id },
+          status: 'accepted',
+        },
+        limit: 1,
+      });
+    if (acceptedRequests.length === 0) {
+      return ctx.forbidden('Seuls les accompagnants peuvent créer des communautés.');
+    }
 
     // Find the user's community profile
     const profiles = await strapi.documents('api::community-profile.community-profile').findMany({

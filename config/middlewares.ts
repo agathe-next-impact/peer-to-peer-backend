@@ -27,11 +27,20 @@ const config: Core.Config.Middlewares = [
     name: 'global::rate-limit',
     config: {
       windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 20, // max attempts per window
+      max: 20, // max attempts per IP per window
       paths: ['/api/auth/local', '/api/auth/local/register', '/api/auth/forgot-password'],
       message: 'Trop de tentatives, veuillez réessayer plus tard.',
+      accountLockoutMax: 5, // lock account after 5 failed login attempts
+      accountLockoutDurations: [
+        60 * 1000,       // 1 minute
+        5 * 60 * 1000,   // 5 minutes
+        15 * 60 * 1000,  // 15 minutes
+        60 * 60 * 1000,  // 1 hour
+      ],
+      trustProxy: isProduction, // trust X-Forwarded-For in production
     },
   },
+  'global::token-blacklist',
   'strapi::poweredBy',
   'strapi::query',
   {

@@ -33,9 +33,14 @@
     },
     "status": {
       "type": "enumeration",
-      "enum": ["registered", "waitlisted", "cancelled"],
-      "default": "registered",
+      "enum": ["pending", "registered", "waitlisted", "rejected", "cancelled"],
+      "default": "pending",
       "required": true
+    },
+    "invitedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::community-profile.community-profile"
     },
     "personalCalendarEvent": {
       "type": "relation",

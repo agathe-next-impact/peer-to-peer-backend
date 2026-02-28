@@ -177,8 +177,10 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     }
   }
 
-  // Custom actions
+  // Custom actions (including token refresh)
   const customActions = [
+    'api::auth-refresh.auth-refresh.refresh',
+    'api::auth-logout.auth-logout.logout',
     'api::companion-access.companion-access.findGrantedToMe',
     'api::community.community.join',
     'api::community.community.leave',

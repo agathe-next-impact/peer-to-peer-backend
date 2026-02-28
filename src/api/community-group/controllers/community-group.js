@@ -66,7 +66,7 @@ module.exports = createCoreController('api::community-group.community-group', ({
       ...data,
       createdByMember: myProfile.documentId,
     };
-    const entity = await strapi.documents('api::community-group.community-group').create({ data: createData });
+    const entity = await strapi.documents('api::community-group.community-group').create({ data: createData, status: 'published' });
     const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
     return this.transformResponse(sanitizedEntity);
   },

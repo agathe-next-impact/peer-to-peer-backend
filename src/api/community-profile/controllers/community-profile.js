@@ -40,6 +40,12 @@ module.exports = createCoreController('api::community-profile.community-profile'
         user: { id: ctx.state.user.id },
       };
       sanitizedQuery.pagination = { limit: 1 };
+    } else if (ctx.query.myAccompagnantsOnly === 'true' && ctx.query.community && ctx.state.user) {
+      // Recherche d'accompagnants pour invitation : pas de filtre isVisible
+      sanitizedQuery.filters = {
+        ...(sanitizedQuery.filters || {}),
+        communities: { documentId: ctx.query.community },
+      };
     } else if (ctx.query.community && ctx.state.user) {
       // Filter by community membership — only visible members
       sanitizedQuery.filters = {
@@ -101,8 +107,25 @@ module.exports = createCoreController('api::community-profile.community-profile'
       }
     }
 
+    // Filtrer uniquement les accompagnants du user courant
+    // (requesters de companion-requests acceptées où target = user courant)
+    if (ctx.query.myAccompagnantsOnly === 'true' && ctx.state.user) {
+      const accompagnantUserIds = await getAccompagnantUserIds(strapi, ctx.state.user.id);
+      if (accompagnantUserIds.length > 0) {
+        sanitizedQuery.filters = {
+          $and: [
+            sanitizedQuery.filters || {},
+            { user: { id: { $in: accompagnantUserIds } } },
+          ],
+        };
+      } else {
+        return this.transformResponse([], { pagination: { page: 1, pageSize: 25, pageCount: 0, total: 0 } });
+      }
+    }
+
     // Un accompagné ne voit pas les profils de ses accompagnants
-    if (ctx.state.user && ctx.query.mine !== 'true') {
+    // (sauf quand on cherche explicitement ses accompagnants pour invitation)
+    if (ctx.state.user && ctx.query.mine !== 'true' && ctx.query.myAccompagnantsOnly !== 'true') {
       const accompagnantUserIds = await getAccompagnantUserIds(strapi, ctx.state.user.id);
       if (accompagnantUserIds.length > 0) {
         sanitizedQuery.filters = {

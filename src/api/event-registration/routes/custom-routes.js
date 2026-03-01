@@ -26,5 +26,13 @@ module.exports = {
         policies: [],
       },
     },
+    {
+      method: 'POST',
+      path: '/event-registrations/:id/revoke',
+      handler: 'event-registration.revoke',
+      config: {
+        policies: [],
+      },
+    },
   ],
 };

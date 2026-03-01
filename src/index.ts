@@ -194,6 +194,10 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::companion-request.companion-request.reject',
     'api::companion-request.companion-request.cancel',
     'api::companion-bookmark.companion-bookmark.revoke',
+    'api::event-registration.event-registration.invite',
+    'api::event-registration.event-registration.accept',
+    'api::event-registration.event-registration.reject',
+    'api::event-registration.event-registration.revoke',
   ];
   for (const action of customActions) {
     const permission = await strapi.db

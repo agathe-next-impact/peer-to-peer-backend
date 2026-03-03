@@ -1,5 +1,6 @@
 import type { Core } from '@strapi/strapi';
 import * as fs from 'fs';
+import * as fsp from 'fs/promises';
 import * as path from 'path';
 
 /**
@@ -42,11 +43,11 @@ function loadBlacklist() {
   }
 }
 
-function saveBlacklist() {
+async function saveBlacklist() {
   try {
     const dir = path.dirname(PERSIST_PATH);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(PERSIST_PATH, JSON.stringify(Array.from(blacklist.values())), 'utf-8');
+    if (!fs.existsSync(dir)) await fsp.mkdir(dir, { recursive: true });
+    await fsp.writeFile(PERSIST_PATH, JSON.stringify(Array.from(blacklist.values())), 'utf-8');
   } catch {
     // Ignore write errors
   }

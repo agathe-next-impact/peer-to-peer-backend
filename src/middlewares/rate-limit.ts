@@ -1,5 +1,6 @@
 import type { Core } from '@strapi/strapi';
 import * as fs from 'fs';
+import * as fsp from 'fs/promises';
 import * as path from 'path';
 
 interface RateLimitConfig {
@@ -65,7 +66,7 @@ function loadFromDisk() {
   }
 }
 
-function saveToDisk() {
+async function saveToDisk() {
   if (!persistPath) return;
   try {
     const data: PersistentStore = {
@@ -73,8 +74,8 @@ function saveToDisk() {
       accountEntries: Object.fromEntries(accountStore),
     };
     const dir = path.dirname(persistPath);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(persistPath, JSON.stringify(data), 'utf-8');
+    if (!fs.existsSync(dir)) await fsp.mkdir(dir, { recursive: true });
+    await fsp.writeFile(persistPath, JSON.stringify(data), 'utf-8');
   } catch {
     // Ignore write errors
   }

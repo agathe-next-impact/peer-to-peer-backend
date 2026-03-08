@@ -10,21 +10,28 @@ export default {
     // Register encryption lifecycles for private content-types
     registerEncryptionLifecycles(strapi);
 
-    // Configure public permissions for the frontend
-    await configurePublicPermissions(strapi);
-    // Configure authenticated permissions for private content
-    await configureAuthenticatedPermissions(strapi);
+    // Configure permissions (bulk approach to minimize memory usage)
+    await configurePermissions(strapi);
   },
 };
 
-async function configurePublicPermissions(strapi: Core.Strapi) {
-  const publicRole = await strapi.db
-    .query('plugin::users-permissions.role')
-    .findOne({ where: { type: 'public' } });
+/**
+ * Ensures all required permissions exist and are enabled.
+ * Uses bulk queries instead of individual ones to reduce memory pressure.
+ */
+async function configurePermissions(strapi: Core.Strapi) {
+  const permQuery = strapi.db.query('plugin::users-permissions.permission');
 
-  if (!publicRole) return;
+  // Load both roles in parallel
+  const [publicRole, authenticatedRole] = await Promise.all([
+    strapi.db.query('plugin::users-permissions.role').findOne({ where: { type: 'public' } }),
+    strapi.db.query('plugin::users-permissions.role').findOne({ where: { type: 'authenticated' } }),
+  ]);
 
-  // Content-types that should be publicly readable (find + findOne)
+  if (!publicRole || !authenticatedRole) return;
+
+  // --- Build the desired action lists per role ---
+
   const publicContentTypes = [
     'api::blog-article.blog-article',
     'api::blog-category.blog-category',
@@ -44,39 +51,6 @@ async function configurePublicPermissions(strapi: Core.Strapi) {
     'api::community.community',
   ];
 
-  for (const uid of publicContentTypes) {
-    for (const action of ['find', 'findOne']) {
-      const permission = await strapi.db
-        .query('plugin::users-permissions.permission')
-        .findOne({
-          where: {
-            role: publicRole.id,
-            action: `${uid}.${action}`,
-          },
-        });
-
-      if (!permission) {
-        await strapi.db
-          .query('plugin::users-permissions.permission')
-          .create({
-            data: {
-              role: publicRole.id,
-              action: `${uid}.${action}`,
-              enabled: true,
-            },
-          });
-      } else if (!permission.enabled) {
-        await strapi.db
-          .query('plugin::users-permissions.permission')
-          .update({
-            where: { id: permission.id },
-            data: { enabled: true },
-          });
-      }
-    }
-  }
-
-  // Ensure auth endpoints are enabled for Public role
   const authActions = [
     'plugin::users-permissions.auth.callback',
     'plugin::users-permissions.auth.register',
@@ -84,40 +58,6 @@ async function configurePublicPermissions(strapi: Core.Strapi) {
     'plugin::users-permissions.auth.resetPassword',
   ];
 
-  for (const action of authActions) {
-    const permission = await strapi.db
-      .query('plugin::users-permissions.permission')
-      .findOne({
-        where: { role: publicRole.id, action },
-      });
-
-    if (!permission) {
-      await strapi.db
-        .query('plugin::users-permissions.permission')
-        .create({
-          data: { role: publicRole.id, action, enabled: true },
-        });
-    } else if (!permission.enabled) {
-      await strapi.db
-        .query('plugin::users-permissions.permission')
-        .update({
-          where: { id: permission.id },
-          data: { enabled: true },
-        });
-    }
-  }
-
-  strapi.log.info('Public API permissions configured (including auth)');
-}
-
-async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
-  const authenticatedRole = await strapi.db
-    .query('plugin::users-permissions.role')
-    .findOne({ where: { type: 'authenticated' } });
-
-  if (!authenticatedRole) return;
-
-  // Private content-types: full CRUD for authenticated users
   const privateContentTypes = [
     'api::personal-notebook.personal-notebook',
     'api::personal-goal.personal-goal',
@@ -145,41 +85,6 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::encryption-key-store.encryption-key-store',
   ];
 
-  const crudActions = ['find', 'findOne', 'create', 'update', 'delete'];
-
-  for (const uid of privateContentTypes) {
-    for (const action of crudActions) {
-      const permission = await strapi.db
-        .query('plugin::users-permissions.permission')
-        .findOne({
-          where: {
-            role: authenticatedRole.id,
-            action: `${uid}.${action}`,
-          },
-        });
-
-      if (!permission) {
-        await strapi.db
-          .query('plugin::users-permissions.permission')
-          .create({
-            data: {
-              role: authenticatedRole.id,
-              action: `${uid}.${action}`,
-              enabled: true,
-            },
-          });
-      } else if (!permission.enabled) {
-        await strapi.db
-          .query('plugin::users-permissions.permission')
-          .update({
-            where: { id: permission.id },
-            data: { enabled: true },
-          });
-      }
-    }
-  }
-
-  // Custom actions (including token refresh)
   const customActions = [
     'api::auth-refresh.auth-refresh.refresh',
     'api::auth-logout.auth-logout.logout',
@@ -201,79 +106,66 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::event-registration.event-registration.reject',
     'api::event-registration.event-registration.revoke',
   ];
-  for (const action of customActions) {
-    const permission = await strapi.db
-      .query('plugin::users-permissions.permission')
-      .findOne({
-        where: { role: authenticatedRole.id, action },
-      });
-    if (!permission) {
-      await strapi.db
-        .query('plugin::users-permissions.permission')
-        .create({
-          data: { role: authenticatedRole.id, action, enabled: true },
-        });
-    } else if (!permission.enabled) {
-      await strapi.db
-        .query('plugin::users-permissions.permission')
-        .update({
-          where: { id: permission.id },
-          data: { enabled: true },
-        });
-    }
-  }
 
-  // Authenticated users should also read public content
-  const publicContentTypes = [
-    'api::blog-article.blog-article',
-    'api::blog-category.blog-category',
-    'api::tag.tag',
-    'api::event.event',
-    'api::news-item.news-item',
-    'api::structure.structure',
-    'api::service-type.service-type',
-    'api::knowledge-category.knowledge-category',
-    'api::knowledge-base-entry.knowledge-base-entry',
-    'api::tutorial.tutorial',
-    'api::assessment-template.assessment-template',
-    'api::about-page.about-page',
-    'api::homepage.homepage',
-    'api::community-profile.community-profile',
-    'api::community-group.community-group',
-    'api::community.community',
-  ];
+  // Build { roleId, action } pairs
+  const desired: { roleId: number; action: string }[] = [];
 
+  // Public role: read public content + auth endpoints
   for (const uid of publicContentTypes) {
-    for (const action of ['find', 'findOne']) {
-      const permission = await strapi.db
-        .query('plugin::users-permissions.permission')
-        .findOne({
-          where: {
-            role: authenticatedRole.id,
-            action: `${uid}.${action}`,
-          },
-        });
+    for (const act of ['find', 'findOne']) {
+      desired.push({ roleId: publicRole.id, action: `${uid}.${act}` });
+    }
+  }
+  for (const act of authActions) {
+    desired.push({ roleId: publicRole.id, action: act });
+  }
 
-      if (!permission) {
-        await strapi.db
-          .query('plugin::users-permissions.permission')
-          .create({
-            data: {
-              role: authenticatedRole.id,
-              action: `${uid}.${action}`,
-              enabled: true,
-            },
-          });
-      } else if (!permission.enabled) {
-        await strapi.db
-          .query('plugin::users-permissions.permission')
-          .update({
-            where: { id: permission.id },
-            data: { enabled: true },
-          });
-      }
+  // Authenticated role: CRUD on private + read public + custom actions
+  for (const uid of privateContentTypes) {
+    for (const act of ['find', 'findOne', 'create', 'update', 'delete']) {
+      desired.push({ roleId: authenticatedRole.id, action: `${uid}.${act}` });
+    }
+  }
+  for (const uid of publicContentTypes) {
+    for (const act of ['find', 'findOne']) {
+      desired.push({ roleId: authenticatedRole.id, action: `${uid}.${act}` });
+    }
+  }
+  for (const act of customActions) {
+    desired.push({ roleId: authenticatedRole.id, action: act });
+  }
+
+  // --- Load ALL existing permissions for both roles in one query ---
+
+  const roleIds = [publicRole.id, authenticatedRole.id];
+  const existingPermissions = await permQuery.findMany({
+    where: { role: { $in: roleIds } },
+    select: ['id', 'action', 'enabled', 'role'],
+  });
+
+  // Index by "roleId::action" for O(1) lookups
+  const permIndex = new Map<string, { id: number; enabled: boolean }>();
+  for (const p of existingPermissions) {
+    permIndex.set(`${p.role}::${p.action}`, { id: p.id, enabled: p.enabled });
+  }
+
+  // --- Create missing / enable disabled permissions ---
+
+  for (const { roleId, action } of desired) {
+    const key = `${roleId}::${action}`;
+    const existing = permIndex.get(key);
+
+    if (!existing) {
+      await permQuery.create({
+        data: { role: roleId, action, enabled: true },
+      });
+    } else if (!existing.enabled) {
+      await permQuery.update({
+        where: { id: existing.id },
+        data: { enabled: true },
+      });
     }
   }
 
-  strapi.log.info('Authenticated API permissions configured');
+  strapi.log.info('All API permissions configured');
 }

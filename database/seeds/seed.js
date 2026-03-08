@@ -19,6 +19,7 @@
  *   npm run seed --workspace=apps/backend
  */
 
+require('dotenv').config();
 const { createStrapi } = require('@strapi/strapi');
 const bcrypt = require('bcryptjs');
 

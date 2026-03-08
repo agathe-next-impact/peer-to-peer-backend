@@ -140,31 +140,27 @@ async function configurePermissions(strapi: Core.Strapi) {
   const roleIds = [publicRole.id, authenticatedRole.id];
   const existingPermissions = await permQuery.findMany({
     where: { role: { $in: roleIds } },
-    select: ['id', 'action', 'enabled', 'role'],
+    select: ['id', 'action'],
+    populate: ['role'],
   });
 
   // Index by "roleId::action" for O(1) lookups
-  const permIndex = new Map<string, { id: number; enabled: boolean }>();
+  const permIndex = new Set<string>();
   for (const p of existingPermissions) {
-    permIndex.set(`${p.role}::${p.action}`, { id: p.id, enabled: p.enabled });
+    const roleId = typeof p.role === 'object' ? p.role?.id : p.role;
+    permIndex.add(`${roleId}::${p.action}`);
   }
 
-  // --- Create missing / enable disabled permissions ---
+  // --- Create missing permissions (batch to reduce memory pressure) ---
 
-  for (const { roleId, action } of desired) {
-    const key = `${roleId}::${action}`;
-    const existing = permIndex.get(key);
+  const missing = desired.filter(({ roleId, action }) => !permIndex.has(`${roleId}::${action}`));
 
-    if (!existing) {
-      await permQuery.create({
-        data: { role: roleId, action, enabled: true },
-      });
-    } else if (!existing.enabled) {
-      await permQuery.update({
-        where: { id: existing.id },
-        data: { enabled: true },
-      });
-    }
+  // Process in small batches of 10 to limit peak memory
+  for (let i = 0; i < missing.length; i += 10) {
+    const batch = missing.slice(i, i + 10);
+    await Promise.all(
+      batch.map(({ roleId, action }) => permQuery.create({ data: { role: roleId, action } }))
+    );
   }
 
   strapi.log.info('All API permissions configured');

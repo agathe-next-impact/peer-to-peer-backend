@@ -205,6 +205,7 @@ function registerEncryptionLifecycles(strapi) {
     'api::situation-objective.situation-objective',
     'api::self-problem-solving.self-problem-solving',
     'api::early-warning-sign.early-warning-sign',
+    'api::self-determined-profile.self-determined-profile',
   ];
 
   for (const uid of privateContentTypes) {

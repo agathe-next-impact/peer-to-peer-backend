@@ -141,6 +141,8 @@ async function configureAuthenticatedPermissions(strapi: Core.Strapi) {
     'api::wellness-checkin.wellness-checkin',
     'api::wellness-tracker-config.wellness-tracker-config',
     'api::companion-request.companion-request',
+    'api::self-determined-profile.self-determined-profile',
+    'api::encryption-key-store.encryption-key-store',
   ];
 
   const crudActions = ['find', 'findOne', 'create', 'update', 'delete'];

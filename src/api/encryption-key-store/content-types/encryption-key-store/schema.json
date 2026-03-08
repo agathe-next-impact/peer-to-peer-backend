@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "encryption_key_stores",
+  "info": {
+    "singularName": "encryption-key-store",
+    "pluralName": "encryption-key-stores",
+    "displayName": "Encryption Key Store",
+    "description": "Stores wrapped encryption keys per user (wrappedKey is encrypted by password-derived KEK, not sensitive at rest)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": false
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "wrappedKey": {
+      "type": "text",
+      "required": true
+    },
+    "iv": {
+      "type": "string",
+      "required": true
+    },
+    "salt": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

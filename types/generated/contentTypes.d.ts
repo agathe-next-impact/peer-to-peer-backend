@@ -935,6 +935,41 @@ export interface ApiEarlyWarningSignEarlyWarningSign extends Struct.CollectionTy
   };
 }
 
+export interface ApiEncryptionKeyStoreEncryptionKeyStore extends Struct.CollectionTypeSchema {
+  collectionName: 'encryption_key_stores';
+  info: {
+    description: 'Stores wrapped encryption keys per user (wrappedKey is encrypted by password-derived KEK, not sensitive at rest)';
+    displayName: 'Encryption Key Store';
+    pluralName: 'encryption-key-stores';
+    singularName: 'encryption-key-store';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    iv: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::encryption-key-store.encryption-key-store'
+    > &
+      Schema.Attribute.Private;
+    owner: Schema.Attribute.Relation<'oneToOne', 'plugin::users-permissions.user'>;
+    publishedAt: Schema.Attribute.DateTime;
+    salt: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    wrappedKey: Schema.Attribute.Text & Schema.Attribute.Required;
+  };
+}
+
 export interface ApiEventRegistrationEventRegistration extends Struct.CollectionTypeSchema {
   collectionName: 'event_registrations';
   info: {
@@ -1563,6 +1598,58 @@ export interface ApiSelfAssessmentSelfAssessment extends Struct.CollectionTypeSc
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSelfDeterminedProfileSelfDeterminedProfile extends Struct.CollectionTypeSchema {
+  collectionName: 'self_determined_profiles';
+  info: {
+    description: 'Profil autod\u00E9termin\u00E9 \u2014 Le Paircours (4 axes)';
+    displayName: 'Self Determined Profile';
+    pluralName: 'self-determined-profiles';
+    singularName: 'self-determined-profile';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+    encryption: {
+      enabled: true;
+      fields: [
+        'wellnessCompass',
+        'strengthsIdentification',
+        'vulnerabilitiesBalance',
+        'functionalAssessment',
+      ];
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    functionalAssessment: Schema.Attribute.JSON;
+    lastUpdated: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::self-determined-profile.self-determined-profile'
+    > &
+      Schema.Attribute.Private;
+    onboardingCompletedAt: Schema.Attribute.DateTime;
+    owner: Schema.Attribute.Relation<'oneToOne', 'plugin::users-permissions.user'>;
+    publishedAt: Schema.Attribute.DateTime;
+    stabilityLevel: Schema.Attribute.Enumeration<
+      ['crisis', 'fragile', 'stabilizing', 'stable', 'thriving']
+    > &
+      Schema.Attribute.DefaultTo<'stabilizing'>;
+    strengthsIdentification: Schema.Attribute.JSON;
+    suggestedModules: Schema.Attribute.JSON;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    vulnerabilitiesBalance: Schema.Attribute.JSON;
+    wellnessCompass: Schema.Attribute.JSON;
   };
 }
 
@@ -2487,6 +2574,7 @@ declare module '@strapi/strapi' {
       'api::contributor-profile.contributor-profile': ApiContributorProfileContributorProfile;
       'api::document-template.document-template': ApiDocumentTemplateDocumentTemplate;
       'api::early-warning-sign.early-warning-sign': ApiEarlyWarningSignEarlyWarningSign;
+      'api::encryption-key-store.encryption-key-store': ApiEncryptionKeyStoreEncryptionKeyStore;
       'api::event-registration.event-registration': ApiEventRegistrationEventRegistration;
       'api::event.event': ApiEventEvent;
       'api::generated-document.generated-document': ApiGeneratedDocumentGeneratedDocument;
@@ -2502,6 +2590,7 @@ declare module '@strapi/strapi' {
       'api::recovery-recommendation.recovery-recommendation': ApiRecoveryRecommendationRecoveryRecommendation;
       'api::resource-preference.resource-preference': ApiResourcePreferenceResourcePreference;
       'api::self-assessment.self-assessment': ApiSelfAssessmentSelfAssessment;
+      'api::self-determined-profile.self-determined-profile': ApiSelfDeterminedProfileSelfDeterminedProfile;
       'api::self-problem-solving.self-problem-solving': ApiSelfProblemSolvingSelfProblemSolving;
       'api::service-type.service-type': ApiServiceTypeServiceType;
       'api::situation-objective.situation-objective': ApiSituationObjectiveSituationObjective;

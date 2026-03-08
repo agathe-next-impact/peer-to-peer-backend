@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "self_determined_profiles",
+  "info": {
+    "singularName": "self-determined-profile",
+    "pluralName": "self-determined-profiles",
+    "displayName": "Self Determined Profile",
+    "description": "Profil autodéterminé — Le Paircours (4 axes)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": [
+        "wellnessCompass",
+        "strengthsIdentification",
+        "vulnerabilitiesBalance",
+        "functionalAssessment"
+      ]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "wellnessCompass": {
+      "type": "json"
+    },
+    "strengthsIdentification": {
+      "type": "json"
+    },
+    "vulnerabilitiesBalance": {
+      "type": "json"
+    },
+    "functionalAssessment": {
+      "type": "json"
+    },
+    "stabilityLevel": {
+      "type": "enumeration",
+      "enum": ["crisis", "fragile", "stabilizing", "stable", "thriving"],
+      "default": "stabilizing"
+    },
+    "suggestedModules": {
+      "type": "json"
+    },
+    "onboardingCompletedAt": {
+      "type": "datetime"
+    },
+    "lastUpdated": {
+      "type": "datetime"
+    }
+  }
+}

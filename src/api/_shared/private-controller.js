@@ -33,6 +33,7 @@ const SECTION_MAP = {
     'api::situation-thesaurus.situation-thesaurus',
     'api::situation-objective.situation-objective',
     'api::recovery-profile.recovery-profile',
+    'api::self-determined-profile.self-determined-profile',
   ],
   agir: [
     'api::personal-goal.personal-goal',

@@ -1527,6 +1527,60 @@ export interface ApiRecoveryRecommendationRecoveryRecommendation
   };
 }
 
+export interface ApiRecoveryTrackingRecoveryTracking extends Struct.CollectionTypeSchema {
+  collectionName: 'recovery_trackings';
+  info: {
+    description: 'Suivi du processus de r\u00E9tablissement \u2014 \u00E9valuation et orientation';
+    displayName: 'Recovery Tracking';
+    pluralName: 'recovery-trackings';
+    singularName: 'recovery-tracking';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+    encryption: {
+      enabled: true;
+      fields: ['suggestions', 'moduleScores', 'toolUsage', 'evolution'];
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    date: Schema.Attribute.Date & Schema.Attribute.Required;
+    evolution: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::recovery-tracking.recovery-tracking'
+    > &
+      Schema.Attribute.Private;
+    moduleScores: Schema.Attribute.JSON;
+    overallScore: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 100;
+          min: 0;
+        },
+        number
+      >;
+    owner: Schema.Attribute.Relation<'manyToOne', 'plugin::users-permissions.user'>;
+    publishedAt: Schema.Attribute.DateTime;
+    recoveryStage: Schema.Attribute.Enumeration<
+      ['moratorium', 'awareness', 'preparation', 'rebuilding', 'growth']
+    >;
+    stabilityTrend: Schema.Attribute.Enumeration<['declining', 'stable', 'improving']> &
+      Schema.Attribute.DefaultTo<'stable'>;
+    suggestions: Schema.Attribute.JSON;
+    toolUsage: Schema.Attribute.JSON;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
 export interface ApiResourcePreferenceResourcePreference extends Struct.CollectionTypeSchema {
   collectionName: 'resource_preferences';
   info: {
@@ -1604,7 +1658,7 @@ export interface ApiSelfAssessmentSelfAssessment extends Struct.CollectionTypeSc
 export interface ApiSelfDeterminedProfileSelfDeterminedProfile extends Struct.CollectionTypeSchema {
   collectionName: 'self_determined_profiles';
   info: {
-    description: 'Profil autod\u00E9termin\u00E9 \u2014 Le Paircours (4 axes)';
+    description: 'Profil autod\u00E9termin\u00E9 \u2014 Le Chemin (4 axes)';
     displayName: 'Self Determined Profile';
     pluralName: 'self-determined-profiles';
     singularName: 'self-determined-profile';
@@ -2588,6 +2642,7 @@ declare module '@strapi/strapi' {
       'api::platform-setting.platform-setting': ApiPlatformSettingPlatformSetting;
       'api::recovery-profile.recovery-profile': ApiRecoveryProfileRecoveryProfile;
       'api::recovery-recommendation.recovery-recommendation': ApiRecoveryRecommendationRecoveryRecommendation;
+      'api::recovery-tracking.recovery-tracking': ApiRecoveryTrackingRecoveryTracking;
       'api::resource-preference.resource-preference': ApiResourcePreferenceResourcePreference;
       'api::self-assessment.self-assessment': ApiSelfAssessmentSelfAssessment;
       'api::self-determined-profile.self-determined-profile': ApiSelfDeterminedProfileSelfDeterminedProfile;

@@ -45,6 +45,7 @@ const SECTION_MAP = {
     'api::recovery-profile.recovery-profile',
     'api::wellness-checkin.wellness-checkin',
     'api::wellness-tracker-config.wellness-tracker-config',
+    'api::recovery-tracking.recovery-tracking',
   ],
 };
 

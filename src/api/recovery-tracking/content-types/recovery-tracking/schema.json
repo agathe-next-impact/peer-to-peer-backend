@@ -1,0 +1,65 @@
+{
+  "kind": "collectionType",
+  "collectionName": "recovery_trackings",
+  "info": {
+    "singularName": "recovery-tracking",
+    "pluralName": "recovery-trackings",
+    "displayName": "Recovery Tracking",
+    "description": "Suivi du processus de rétablissement — évaluation et orientation"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "encryption": {
+      "enabled": true,
+      "fields": ["suggestions", "moduleScores", "toolUsage", "evolution"]
+    }
+  },
+  "attributes": {
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "overallScore": {
+      "type": "decimal",
+      "min": 0,
+      "max": 100
+    },
+    "recoveryStage": {
+      "type": "enumeration",
+      "enum": [
+        "moratorium",
+        "awareness",
+        "preparation",
+        "rebuilding",
+        "growth"
+      ]
+    },
+    "stabilityTrend": {
+      "type": "enumeration",
+      "enum": ["declining", "stable", "improving"],
+      "default": "stable"
+    },
+    "moduleScores": {
+      "type": "json"
+    },
+    "toolUsage": {
+      "type": "json"
+    },
+    "evolution": {
+      "type": "json"
+    },
+    "suggestions": {
+      "type": "json"
+    }
+  }
+}

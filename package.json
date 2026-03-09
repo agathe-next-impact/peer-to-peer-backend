@@ -7,9 +7,9 @@
     "build": "strapi build",
     "console": "strapi console",
     "deploy": "strapi deploy",
-    "dev": "strapi develop",
-    "develop": "strapi develop",
-    "start": "strapi start",
+    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=512 strapi develop",
+    "develop": "cross-env NODE_OPTIONS=--max-old-space-size=512 strapi develop",
+    "start": "cross-env NODE_OPTIONS=--max-old-space-size=512 strapi start",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry",
@@ -35,6 +35,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cross-env": "^10.1.0",
     "typescript": "^5"
   },
   "engines": {
